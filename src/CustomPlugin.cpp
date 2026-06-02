@@ -4,6 +4,8 @@
 CustomPluginInstance::CustomPluginInstance(OfxImageEffectHandle handle) : OFX::ImageEffect(handle) {
     dstClip_ = fetchClip(kOfxImageEffectOutputClipName);
     srcClip_ = fetchClip(kOfxImageEffectSimpleSourceClipName);
+
+    intensityParam_ = fetchDoubleParam("intensity");
 }
 
 inline float fastHash(uint32_t x, uint32_t y, uint32_t frame) {
@@ -34,7 +36,11 @@ void CustomPluginInstance::render(const OFX::RenderArguments &args) {
     OfxRectI renderWindow = args.renderWindow;
 
     uint32_t frame = static_cast<uint32_t>(args.time);
-    float grainIntensity = 0.15f;
+    
+    double currentIntensity;
+    intensityParam_->getValueAtTime(args.time, currentIntensity);
+
+    float grainIntensity = static_cast<float>(currentIntensity);
 
     for (int y = renderWindow.y1; y < renderWindow.y2; ++y) {
         char* srcRowStart = srcData + (y - srcBounds.y1) * srcRowBytes;
@@ -72,9 +78,12 @@ CustomPluginFactory::CustomPluginFactory()
 
 void CustomPluginFactory::describe(OFX::ImageEffectDescriptor &desc) {
     desc.setPluginGrouping("Custom Plugins");
+    desc.setLabels("Cinematic Grain", "CineGrain", "Cinematic Film Grain Generator");
+    
     desc.setPluginDescription("A basic CPU OpenFX film grain plugin.");
     desc.addSupportedContext(OFX::eContextFilter);
     desc.addSupportedBitDepth(OFX::eBitDepthFloat);
+    
 }
 
 void CustomPluginFactory::describeInContext(OFX::ImageEffectDescriptor &desc, OFX::ContextEnum context) {
@@ -83,6 +92,13 @@ void CustomPluginFactory::describeInContext(OFX::ImageEffectDescriptor &desc, OF
 
     OFX::ClipDescriptor *dstClip = desc.defineClip(kOfxImageEffectOutputClipName);
     dstClip->addSupportedComponent(OFX::ePixelComponentRGBA);
+
+    OFX::DoubleParamDescriptor* intensity = desc.defineDoubleParam("intensity");
+    intensity->setLabels("Grain Intensity", "Intensity", "Intensity");
+    intensity->setDefault(0.15);
+    intensity->setRange(0.0, 10.0);       // Absolute hard limits (user cannot type values outside this)
+    intensity->setDisplayRange(0.0, 1.0); // The visual limits of the slider UI
+    intensity->setHint("Controls the opacity of the procedural grain.");
 }
 
 OFX::ImageEffect* CustomPluginFactory::createInstance(OfxImageEffectHandle handle, OFX::ContextEnum context) {

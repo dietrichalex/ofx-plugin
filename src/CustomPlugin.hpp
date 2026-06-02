@@ -12,6 +12,7 @@ public:
 private:
     OFX::Clip *srcClip_;
     OFX::Clip *dstClip_;
+    OFX::DoubleParam* intensityParam_;
 };
 
 class CustomPluginFactory : public OFX::PluginFactoryHelper<CustomPluginFactory> {
