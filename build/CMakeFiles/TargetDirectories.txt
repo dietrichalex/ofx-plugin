@@ -1,4 +1,0 @@
-F:/CustomPlugin/build/CMakeFiles/CustomPlugin.dir
-F:/CustomPlugin/build/CMakeFiles/ALL_BUILD.dir
-F:/CustomPlugin/build/CMakeFiles/ZERO_CHECK.dir
-F:/CustomPlugin/build/openfx/Support/Library/CMakeFiles/OfxSupport.dir

@@ -1,9 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"F:/CustomPlugin/build/cmake_install.cmake",
-		"F:/CustomPlugin/build/openfx/Support/cmake_install.cmake",
-		"F:/CustomPlugin/build/openfx/Support/Library/cmake_install.cmake"
-	],
-	"Parallel" : false
-}
