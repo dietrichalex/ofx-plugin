@@ -1,0 +1,4 @@
+LIBRARY CustomPlugin.ofx
+EXPORTS
+    OfxGetNumberOfPlugins
+    OfxGetPlugin
