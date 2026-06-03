@@ -3,6 +3,10 @@
 #include "ofxsImageEffect.h"
 #include "ofxsMultiThread.h"
 #include "ofxsProcessing.h"
+#include <memory>
+#include <random>
+#include <algorithm>
+#include <cmath>
 
 class CustomPluginInstance : public OFX::ImageEffect {
 public:

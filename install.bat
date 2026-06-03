@@ -7,6 +7,7 @@ cd /d "%~dp0"
 set "SRC=build\Release\CustomPlugin.ofx"
 set "DEST_DIR=C:\Program Files\Common Files\OFX\Plugins\CustomPlugin.ofx.bundle\Contents\Win64"
 set "DEST_FILE=%DEST_DIR%\CustomPlugin.ofx"
+set "CACHE_PATH=C:\Users\alexd\AppData\Roaming\Blackmagic Design\DaVinci Resolve\Support\OFXPluginCacheV2.xml"
 
 :: 1. Admin Check
 net session >nul 2>&1
@@ -33,6 +34,13 @@ if not exist "%DEST_DIR%" (
 :: 4. Deployment
 echo [INFO] Copying binary...
 copy /Y "%SRC%" "%DEST_FILE%"
+
+:: 5. Delete Cache
+del /f /q "%CACHE_PATH%"
+if exist "%CACHE_PATH%" (
+    echo Error: Failed to delete cache. Resolve might be running.
+    exit /b 1
+)
 
 if %errorLevel% equ 0 (
     echo [SUCCESS] Plugin installed successfully.
